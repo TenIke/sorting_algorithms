@@ -1,4 +1,5 @@
 #include "sort.h"
+
 /**
  * merge_sort -  sorts an array of integers in ascending order
  * @array: array to be sorted
