@@ -1,52 +1,55 @@
 #include "sort.h"
-
 /**
- * swap_nodes - Swap two nodes in a listint_t doubly-linked list.
- * @h: A pointer to the head of the doubly-linked list.
- * @n1: A pointer to the first node to swap.
- * @n2: The second node to swap.
- */
-
-void swap_nodes(listint_t **h, listint_t **n1, listint_t *n2)
-{
-	(*n1)->next = n2->next;
-	if (n2->next != NULL)
-		n2->next->prev = *n1;
-	n2->prev = (*n1)->prev;
-	n2->next = *n1;
-	if ((*n1)->prev != NULL)
-		(*n1)->prev->next = n2;
-	else
-		*h = n2;
-	(*n1)->prev = n2;
-	*n1 = n2->prev;
-}
-
-/**
- * insertion_sort_list - sorts a doubly linked list of
- * integers in ascending order
- * @list: A pointer to the head of the doubly linked list
- *
- */
-
-/*
-Time Complexity: O(n^2)
-*/
+ * insertion_sort_list - sorts a doubly linked list in ascending order
+ * @list: the list to be sorted
+ * Return: Nothing
+ **/
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *iter, *insert, *tmp;
+	listint_t *first = NULL;
+	listint_t *sec = NULL;
 
 	if (list == NULL || *list == NULL || (*list)->next == NULL)
 		return;
 
-	for (iter = (*list)->next; iter != NULL; iter = tmp)
+	sec = (*list)->next;
+	first = sec->prev;
+
+	while (sec != NULL)
 	{
-		tmp = iter->next;
-		insert = iter->prev;
-		while (insert != NULL && iter->n < insert->n)
+		first = sec->prev;
+		while (first != NULL && first->n > sec->n)
 		{
-			swap_nodes(list, &insert, iter);
-			print_list((const listint_t *)*list);
+			linklist_swapping(sec, first, list);
+			first = sec->prev;
 		}
+		sec = sec->next;
 	}
+}
+
+/**
+ * linklist_swapping - swap between two nodes
+ * @sec: second node to be swapped
+ * @first: first node
+ * @h: head
+ **/
+void linklist_swapping(listint_t *sec, listint_t *first, listint_t **h)
+{
+	listint_t *s1 = sec->next;
+	listint_t *s2 = first->prev;
+
+	if (s1 != NULL)
+		s1->prev = first;
+	if (s2 != NULL)
+		s2->next = sec;
+
+	sec->prev = s2;
+	first->next = s1;
+
+	sec->next = first;
+	first->prev = sec;
+
+	if (*h == first)
+		*h = sec;
+	print_list(*h);
 }
